@@ -1,4 +1,7 @@
-﻿namespace Mastermind.Assets
+﻿using Mastermind.State;
+using Mastermind.Model;
+
+namespace Mastermind.IO
 {
     /// <summary>
     /// Handles reading and writing from the console
@@ -72,9 +75,9 @@
         /// Read only valid next n key presses
         /// </summary>
         /// <returns>validated input</returns>
-        public static int[] Read_Chars(string[] status, int n)
+        public static Guess Read_Chars(string[] status, int n)
         {
-            int[] input = new int[n];
+            var input = new Guess(n);
             int count = n;
 
             //Read next 4 valid key presses
@@ -91,7 +94,7 @@
                 //Progress after valid input
                 if(result != -1)
                 {
-                    input[n - count] = result;
+                    input.SetDigit(n - count, result);
                     count -= 1;
                 }
             }
@@ -183,13 +186,10 @@
         /// Request user input
         /// </summary>
         /// <param name="arr">Current inputs</param>
-        private static void Display_Input(int[] arr)
+        private static void Display_Input(Guess attempt)
         {
             Console.Write("Enter your next guess: ");
-            foreach (int i in arr)
-            {
-                Console.Write(i);
-            }
+            attempt.Print();
         }
 
         /// <summary>

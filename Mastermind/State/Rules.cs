@@ -1,15 +1,10 @@
-﻿namespace Mastermind.Assets
+﻿namespace Mastermind.State
 {
     /// <summary>
     /// Keeps the game within its given bounds
     /// </summary>
     public class Rules
     {
-        public int Length
-        {
-            get{ return Digits; }
-        }
-
         public string[] Text
         {
             get{ return Parameters; }  
@@ -50,7 +45,7 @@
         /// Generate random integer within rules range
         /// </summary>
         /// <returns>pseudorandom integer</returns>
-        public static int Random()
+        public static int RandomDigit()
         {
             return new Random().Next(RangeLower, RangeUpper + 1);
         }

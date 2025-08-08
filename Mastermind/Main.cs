@@ -1,4 +1,4 @@
-﻿using Mastermind.Assets;
+﻿using Mastermind.State;
 
 bool playing = true;
 
