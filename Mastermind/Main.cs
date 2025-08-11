@@ -19,7 +19,7 @@ while (playing)
     }
 
     //Offer retry
-    Game.Play_Again();
+    session.Play_Again();
 }
 
 Environment.Exit(0);

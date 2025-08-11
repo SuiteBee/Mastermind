@@ -10,10 +10,12 @@
             get{ return Parameters; }  
         }
 
+        public int CodeLength { get { return Digits; } }
+
         private readonly int Attempts;
         private readonly int Digits;
-        private static int RangeLower;
-        private static int RangeUpper;
+        private readonly int RangeLower;
+        private readonly int RangeUpper;
         private readonly string[] Parameters = new string[7];
 
         /// <summary>
@@ -45,7 +47,7 @@
         /// Generate random integer within rules range
         /// </summary>
         /// <returns>pseudorandom integer</returns>
-        public static int RandomDigit()
+        public int RandomDigit()
         {
             return new Random().Next(RangeLower, RangeUpper + 1);
         }
@@ -56,7 +58,7 @@
         /// <param name="keyChar">Pressed key</param>
         /// <param name="value">external value</param>
         /// <returns>valid</returns>
-        public static bool TryInput(char keyChar, out int value)
+        public bool TryInput(char keyChar, out int value)
         {
             double num = char.GetNumericValue(keyChar);
             bool isNumeric = num > 0;

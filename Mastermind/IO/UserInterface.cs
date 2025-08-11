@@ -6,7 +6,7 @@ namespace Mastermind.IO
     /// <summary>
     /// Handles reading and writing from the console
     /// </summary>
-    public static class UserInterface
+    public class User
     {
         #region " ASCII Headers "
 
@@ -38,12 +38,9 @@ namespace Mastermind.IO
 
         #endregion
 
-        private static string Msg = string.Empty;
-        
-        /// <summary>
-        /// Set console width
-        /// </summary>
-        public static void Initialize()
+        private string Msg = string.Empty;
+
+        public User()
         {
             //To fit ASCII headers
             Console.WindowWidth = 100;
@@ -53,7 +50,7 @@ namespace Mastermind.IO
         /// Display initial start screen with title and rules
         /// </summary>
         /// <param name="ruleText"></param>
-        public static void Show_Rules(string[] ruleText)
+        public void Show_Rules(string[] ruleText)
         {
             Console.Clear();
             Console.WriteLine(Title);
@@ -65,22 +62,22 @@ namespace Mastermind.IO
         /// <summary>
         /// Pause execution until keypress
         /// </summary>
-        public static void Wait()
+        public void Wait_For_Input()
         {
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey(true);
         }
 
         /// <summary>
-        /// Read only valid next n key presses
+        /// Read valid key presses until ruleset bounds satisfied
         /// </summary>
         /// <returns>validated input</returns>
-        public static Guess Read_Chars(string[] status, int n)
+        public Guess Read_Chars(Rules ruleset, string[] status)
         {
-            var input = new Guess(n);
-            int count = n;
+            var input = new Guess(ruleset.CodeLength);
+            int count = ruleset.CodeLength;
 
-            //Read next 4 valid key presses
+            //Read valid key presses until input length = ruleset code length
             while (count > 0)
             {
                 Display_Refresh();
@@ -89,12 +86,12 @@ namespace Mastermind.IO
                 Display_Msg();
                 Display_Input(input);
 
-                int result = ReadKeyValue();
+                int result = ReadKeyValue(ruleset);
 
                 //Progress after valid input
                 if(result != -1)
                 {
-                    input.SetDigit(n - count, result);
+                    input.SetDigit(ruleset.CodeLength - count, result);
                     count -= 1;
                 }
             }
@@ -106,7 +103,7 @@ namespace Mastermind.IO
         /// Show ASCII art
         /// </summary>
         /// <param name="playerWins"></param>
-        public static void Finish(bool playerWins)
+        public void Finish(bool playerWins)
         {
             Console.Clear();
             if (playerWins)
@@ -127,10 +124,10 @@ namespace Mastermind.IO
         /// Offer another attempt and wait for decision
         /// </summary>
         /// <returns>user response</returns>
-        public static bool Retry()
+        public bool Request(string msg)
         {
             Add_Space(1);
-            Console.Write("Would you like to play again? [press y/n to continue/exit]");
+            Console.Write(msg);
 
             while (true)
             {
@@ -151,11 +148,11 @@ namespace Mastermind.IO
         /// Capture next key and validate against rules
         /// </summary>
         /// <returns>value of valid key or -1</returns>
-        private static int ReadKeyValue()
+        private int ReadKeyValue(Rules ruleset)
         {
             char key = Console.ReadKey(true).KeyChar;
 
-            if (Rules.TryInput(key, out int value))
+            if (ruleset.TryInput(key, out int value))
             {
                 return value;
             }
@@ -195,7 +192,7 @@ namespace Mastermind.IO
         /// <summary>
         /// Display message once and clear
         /// </summary>
-        private static void Display_Msg()
+        private void Display_Msg()
         {
             Console.WriteLine(Msg);
             Msg = string.Empty;
@@ -204,7 +201,7 @@ namespace Mastermind.IO
         /// <summary>
         /// Clear console and print title
         /// </summary>
-        private static void Display_Refresh()
+        private void Display_Refresh()
         {
             Console.Clear();
             Console.WriteLine(Title);

@@ -4,16 +4,16 @@ namespace Mastermind.Model
 {
     class Secret: PassCode
     {
-        public Secret(int l) : base(l) 
+        public Secret(Rules ruleset, int l) : base(l) 
         {
-            Generate();
+            Generate(ruleset);
         }
 
-        private void Generate()
+        private void Generate(Rules ruleset)
         {
             for (int i = 0; i < code.Length; i++)
             {
-                code[i] = Rules.RandomDigit();
+                code[i] = ruleset.RandomDigit();
             }
         }
 
@@ -24,7 +24,7 @@ namespace Mastermind.Model
         public string Check(Guess attempt)
         {
             string hint = string.Empty;
-            var mask = new Mask(length, code);
+            var mask = new Mask(this, length);
 
             for (int i = 0; i < attempt.Length; i++)
             {

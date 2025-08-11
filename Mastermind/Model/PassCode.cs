@@ -16,6 +16,12 @@
             code = new int[l];
         }
 
+        public PassCode(int l, PassCode c)
+        {
+            length = l;
+            code = c.code.ToArray();
+        }
+
         public bool Equals(PassCode p)
         {
             return code.SequenceEqual(p.code);

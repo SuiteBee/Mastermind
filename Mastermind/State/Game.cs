@@ -8,9 +8,7 @@ namespace Mastermind.State
     /// </summary>
     public class Game
     {
-        /////////////////////////////////////////
-        //State
-        /////////////////////////////////////////
+        #region " State "
         public bool Continue
         {
             get
@@ -24,11 +22,11 @@ namespace Mastermind.State
         private int Remaining { get; set; }
         private string Hint { get; set; } = string.Empty;
 
-        /////////////////////////////////////////
-        //Parameters
-        /////////////////////////////////////////
-        public readonly Rules Ruleset;
+        #endregion
+
+        private readonly Rules Ruleset;
         private readonly Secret Objective;
+        private readonly User UserInterface;
 
         /// <summary>
         /// Initialize game state and generate secret code
@@ -40,7 +38,8 @@ namespace Mastermind.State
         public Game(int n, int d, int lower, int upper)
         {
             Ruleset = new Rules(n, d, lower, upper);
-            Objective = new Secret(d);
+            Objective = new Secret(Ruleset, d);
+            UserInterface = new User();
             Remaining = n;
 
             Win = false;
@@ -52,9 +51,8 @@ namespace Mastermind.State
         /// </summary>
         public void Intro()
         {
-            UserInterface.Initialize();
             UserInterface.Show_Rules(Ruleset.Text);
-            UserInterface.Wait();
+            UserInterface.Wait_For_Input();
         }
 
         /// <summary>
@@ -64,7 +62,7 @@ namespace Mastermind.State
         public Guess Begin_Round()
         {
             var status = Get_Status();
-            var attempt = UserInterface.Read_Chars(status, Objective.Length);
+            var attempt = UserInterface.Read_Chars(Ruleset, status);
 
             Update_State(attempt);
             return attempt;
@@ -90,9 +88,9 @@ namespace Mastermind.State
         /// Offer retry and get input
         /// </summary>
         /// <returns>user response</returns>
-        public static bool Play_Again()
+        public bool Play_Again()
         {
-            return UserInterface.Retry();
+            return UserInterface.Request("Would you like to play again? [press y/n to continue/exit]");
         }
 
         /// <summary>

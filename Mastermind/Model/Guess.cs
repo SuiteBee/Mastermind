@@ -1,6 +1,6 @@
 ﻿namespace Mastermind.Model
 {
-    public class Guess: PassCode
+    public class Guess : PassCode
     {
         public Guess(int l) : base(l) { }
 
